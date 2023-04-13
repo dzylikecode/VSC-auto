@@ -1,0 +1,139 @@
+{
+  "name": "dstutils",
+  "displayName": "Don't Starve Utils",
+  "description": "generate cache files",
+  "version": "0.0.2",
+  "engines": {
+    "vscode": "^1.77.0"
+  },
+  "publisher": "dzylikecode",
+  "author": {
+    "name": "Dz",
+    "email": "mathBeWithCode@gmail.com"
+  },
+  "license": "MIT",
+  "icon": "res/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dzylikecode/VSCodeExt-DS-Docs"
+  },
+  "homepage": "https://github.com/dzylikecode/VSCodeExt-DS-Docs/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/dzylikecode/VSCodeExt-DS-Docs/issues"
+  },
+  "keywords": [
+    "Don't Starve",
+    "starve",
+    "utils",
+    "docs"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "dstutils",
+      "type": "object",
+      "properties": {
+        "dstutils.mapRules": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "mdDir": {
+                "type": "string",
+                "description": "markdown folder"
+              },
+              "cacheDir": {
+                "type": "string",
+                "description": "cache folder"
+              },
+              "codeDir": {
+                "type": "string",
+                "description": "code folder"
+              },
+              "exclude": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "exclude files"
+              },
+              "ext": {
+                "type": "string",
+                "description": "code file extension"
+              }
+            }
+          },
+          "description": "map rules"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "dstutils.openCode",
+        "title": "open the corresponding code"
+      },
+      {
+        "command": "dstutils.openMarkdown",
+        "title": "open the corresponding markdown"
+      },
+      {
+        "command": "dstutils.generateSummary",
+        "title": "generate summary"
+      },
+      {
+        "command": "dstutils.generateMarkdown",
+        "title": "generate docs"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "dstutils.openCode",
+          "group": "dstutils"
+        },
+        {
+          "command": "dstutils.openMarkdown",
+          "group": "dstutils"
+        },
+        {
+          "command": "dstutils.generateSummary",
+          "group": "dstutils"
+        },
+        {
+          "command": "dstutils.generateMarkdown",
+          "group": "dstutils"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "build": "vsce package --allow-missing-repository",
+    "test": "node ./test/runTest.js",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test-compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.77.0",
+    "@vscode/test-electron": "^2.3.0",
+    "esbuild": "^0.17.16",
+    "eslint": "^8.36.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
+  }
+}
