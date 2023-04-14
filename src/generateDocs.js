@@ -2,12 +2,12 @@ const path = require("path");
 const fs = require("fs");
 const logger = require("./logger.js");
 
-function createMdFile(filePath) {
+function createMdFile(filePath, ext) {
   const mdPath = filePath;
   if (fs.existsSync(mdPath)) return;
-  const mdDir = path.dirname(mdPath);
+  const { dir: mdDir, name: mdName } = path.parse(mdPath);
   if (!fs.existsSync(mdDir)) fs.mkdirSync(mdDir, { recursive: true });
-  const baseName = path.basename(mdPath);
+  const baseName = mdName + ext;
   const content = `# ${baseName}\n\n`;
   return new Promise((resolve, reject) => {
     fs.writeFile(mdPath, content, (err) => {
@@ -101,7 +101,7 @@ function generateDocs(mdDir, codeDir, root, ext) {
         .relative(codeDir, msg.fullPath)
         .slice(0, -ext.length);
       const mdPath = path.join(mdDir, virtualPath + ".md");
-      createMdFile(mdPath);
+      createMdFile(mdPath, ext);
     }
   }
 }
