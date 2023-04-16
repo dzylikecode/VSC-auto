@@ -2,7 +2,7 @@
   "name": "dstutils",
   "displayName": "Don't Starve Utils",
   "description": "generate cache files",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -15,11 +15,11 @@
   "icon": "res/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dzylikecode/VSCodeExt-DS-Docs"
+    "url": "https://github.com/DDLife/VSC-auto"
   },
-  "homepage": "https://github.com/dzylikecode/VSCodeExt-DS-Docs/blob/master/README.md",
+  "homepage": "https://github.com/DDLife/VSC-auto/blob/master/README.md",
   "bugs": {
-    "url": "https://github.com/dzylikecode/VSCodeExt-DS-Docs/issues"
+    "url": "https://github.com/DDLife/VSC-auto/issues"
   },
   "keywords": [
     "Don't Starve",
@@ -116,9 +116,10 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "build": "vsce package --allow-missing-repository",
+    "pack": "vsce package --allow-missing-repository",
     "test": "node ./test/runTest.js",
     "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "build": "npm run vscode:prepublish && npm run pack",
     "esbuild-base": "esbuild ./src/extension.js --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
