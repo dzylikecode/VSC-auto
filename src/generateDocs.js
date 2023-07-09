@@ -82,8 +82,9 @@ function generateSummary(mdDir, root) {
       const relPath = path.relative(mdDir, msg.fullPath);
       const depth = relPath.split(path.sep).length;
       const tabs = (depth - 1) * 2;
+      const linkText = path.basename(msg.name, ".md");
       summary.write(
-        `${" ".repeat(tabs)}- [${msg.name}](${getLink(msg.fullPath)})\n`
+        `${" ".repeat(tabs)}- [${linkText}](${getLink(msg.fullPath)})\n`
       );
     }
   }
