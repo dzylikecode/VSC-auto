@@ -45,8 +45,11 @@ function activate(context) {
   registerCommand("dstutils.generateSummary", () =>
     generateSummary(vscode.window.activeTextEditor.document.uri)
   );
+  // registerCommand("dstutils.generateMarkdown", () =>
+  //   generateDocs(vscode.window.activeTextEditor.document.uri)
+  // );
   registerCommand("dstutils.generateMarkdown", () =>
-    generateDocs(vscode.window.activeTextEditor.document.uri)
+    generateMD(vscode.window.activeTextEditor.document.uri)
   );
 }
 
@@ -142,4 +145,15 @@ function generateDocs(uri) {
   function getFullPath(dir) {
     return path.join(workspaceFolderPath, dir);
   }
+}
+
+function generateMD(uri) {
+  const filePath = uri.fsPath;
+  const workspaceFolderPath = getWorkspaceFolderPath(uri);
+  const res = mapToVirtual(filePath, workspaceFolderPath, config.codeToMd);
+  if (!res) {
+    logger.log(`${filePath} not match any rule or excluded`);
+    return;
+  }
+  return d.createMdFile(res.dstFile, res.rule.src.ext);
 }

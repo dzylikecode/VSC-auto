@@ -2,6 +2,12 @@ const path = require("path");
 const fs = require("fs");
 const logger = require("./logger.js");
 
+/**
+ * @description create a new markdown file if not exist
+ * @param {string} filePath
+ * @param {string} ext
+ * @returns
+ */
 function createMdFile(filePath, ext) {
   const mdPath = filePath;
   if (fs.existsSync(mdPath)) return;
@@ -107,4 +113,4 @@ function generateDocs(mdDir, codeDir, root, ext) {
   }
 }
 
-module.exports = { generateSummary, generateDocs };
+module.exports = { generateSummary, generateDocs, createMdFile };

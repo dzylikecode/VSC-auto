@@ -2,7 +2,7 @@
   "name": "dstutils",
   "displayName": "Don't Starve Utils",
   "description": "generate cache files",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -89,7 +89,7 @@
       },
       {
         "command": "dstutils.generateMarkdown",
-        "title": "generate docs"
+        "title": "generate the corresponding markdown"
       }
     ],
     "menus": {
