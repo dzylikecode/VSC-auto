@@ -19,7 +19,7 @@ function getWorkspaceFolderPath(uri) {
  *
  * @param {string} filePath
  * @param {string} rootPath
- * @param {{src:{dir:string, ext:string}, dst:{dir:string, ext:string}, exclude:string[]}[]} mapRules
+ * @param {{src:{dir:string, ext:string, position?:string}, dst:{dir:string, ext:string, position?:string}, exclude?:string[]}[]} mapRules
  */
 function mapToVirtual(filePath, rootPath, mapRules) {
   const match = mapRules.find(
@@ -58,7 +58,7 @@ function mapToVirtual(filePath, rootPath, mapRules) {
     const relMdDir = path
       .relative(srcDirFull, filePathWithoutExt)
       .replace(/\\/g, "/");
-    return exclude.some((ex) => relMdDir.startsWith(ex));
+    return exclude?.some((ex) => relMdDir.startsWith(ex));
   }
 }
 

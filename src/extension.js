@@ -36,11 +36,14 @@ function activate(context) {
 
   const registerCommand = (menu, fn) =>
     context.subscriptions.push(vscode.commands.registerCommand(menu, fn));
-  registerCommand("dstutils.openCode", () =>
-    openCode(vscode.window.activeTextEditor.document.uri)
-  );
-  registerCommand("dstutils.openMarkdown", () =>
-    openMd(vscode.window.activeTextEditor.document.uri)
+  // registerCommand("dstutils.openSrc", () =>
+  //   openSrc(vscode.window.activeTextEditor.document.uri)
+  // );
+  // registerCommand("dstutils.openDst", () =>
+  //   openDst(vscode.window.activeTextEditor.document.uri)
+  // );
+  registerCommand("dstutils.compare", () =>
+    openCompare(vscode.window.activeTextEditor.document.uri)
   );
   registerCommand("dstutils.generateSummary", () =>
     generateSummary(vscode.window.activeTextEditor.document.uri)
@@ -48,8 +51,8 @@ function activate(context) {
   // registerCommand("dstutils.generateMarkdown", () =>
   //   generateDocs(vscode.window.activeTextEditor.document.uri)
   // );
-  registerCommand("dstutils.generateMarkdown", () =>
-    generateMD(vscode.window.activeTextEditor.document.uri)
+  registerCommand("dstutils.createDst", () =>
+    generateDst(vscode.window.activeTextEditor.document.uri)
   );
 }
 
@@ -67,7 +70,7 @@ module.exports = {
 async function onSave(uri) {
   const filePath = uri.fsPath;
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
-  const res = mapToVirtual(filePath, workspaceFolderPath, config.mdToCache);
+  const res = mapToVirtual(filePath, workspaceFolderPath, config.cacheRule);
   if (!res) return;
 
   try {
@@ -84,7 +87,7 @@ async function onSave(uri) {
 async function onDelete(uri) {
   const filePath = uri.fsPath;
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
-  const res = mapToVirtual(filePath, workspaceFolderPath, config.mdToCache);
+  const res = mapToVirtual(filePath, workspaceFolderPath, config.cacheRule);
   if (!res) return;
 
   try {
@@ -95,32 +98,65 @@ async function onDelete(uri) {
   }
 }
 
-function openCode(uri) {
-  const filePath = uri.fsPath;
-  const workspaceFolderPath = getWorkspaceFolderPath(uri);
-  const res = mapToVirtual(filePath, workspaceFolderPath, config.mdToCode);
-  if (!res) {
-    logger.log(`${filePath} not match any rule or excluded`);
-    return;
+function openFile(filePath, position) {
+  if (position === "left") {
+    return openLeft(filePath);
   }
-  return openRight(res.dstFile);
+  if (position === "right") {
+    return openRight(filePath);
+  }
 }
 
-function openMd(uri) {
+// function openSrc(uri) {
+//   const filePath = uri.fsPath;
+//   const workspaceFolderPath = getWorkspaceFolderPath(uri);
+//   const res = mapToVirtual(filePath, workspaceFolderPath, config.srcRule);
+//   if (res) {
+//     return openFile(res.dstFile, res.rule.dst.position);
+//   }
+//   const forceRes = mapToVirtual(filePath, workspaceFolderPath, config.dstRule);
+//   if (forceRes) {
+//     return openFile(forceRes.dstFile, forceRes.rule.dst.position);
+//   }
+//   logger.log(`${filePath} has been excluded or not match any rule`);
+// }
+
+// function openDst(uri) {
+//   const filePath = uri.fsPath;
+//   const workspaceFolderPath = getWorkspaceFolderPath(uri);
+//   const res = mapToVirtual(filePath, workspaceFolderPath, config.dstRule);
+//   if (res) {
+//     return openFile(res.dstFile, res.rule.dst.position);
+//   }
+//   const forceRes = mapToVirtual(filePath, workspaceFolderPath, config.srcRule);
+//   if (forceRes) {
+//     return openFile(forceRes.dstFile, forceRes.rule.dst.position);
+//   }
+//   logger.log(`${filePath} has been excluded or not match any rule`);
+// }
+
+function openCompare(uri) {
   const filePath = uri.fsPath;
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
-  const res = mapToVirtual(filePath, workspaceFolderPath, config.codeToMd);
-  if (!res) {
-    logger.log(`${filePath} not match any rule or excluded`);
-    return;
+  const res = mapToVirtual(filePath, workspaceFolderPath, config.dstRule);
+  if (res) {
+    return openBoth(res);
   }
-  return openLeft(res.dstFile);
+  const forceRes = mapToVirtual(filePath, workspaceFolderPath, config.srcRule);
+  if (forceRes) {
+    return openBoth(forceRes);
+  }
+  logger.log(`${filePath} has been excluded or not match any rule`);
+  function openBoth(match) {
+    openFile(match.dstFile, match.rule.dst.position);
+    openFile(match.srcFile, match.rule.src.position);
+  }
 }
 
 function generateSummary(uri) {
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
   const res = config.mapRules.map((r) => ({
-    mdDir: getFullPath(r.mdDir),
+    mdDir: getFullPath(r.cache.src.dir),
   }));
   res.forEach((r) => {
     d.generateSummary(r.mdDir, workspaceFolderPath);
@@ -134,9 +170,9 @@ function generateSummary(uri) {
 function generateDocs(uri) {
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
   const res = config.mapRules.map((r) => ({
-    mdDir: getFullPath(r.mdDir),
-    codeDir: getFullPath(r.codeDir),
-    ext: r.ext,
+    mdDir: getFullPath(r.cache.src.dir),
+    codeDir: getFullPath(r.src.dir),
+    ext: r.src.ext,
   }));
   res.forEach((r) => {
     d.generateDocs(r.mdDir, r.codeDir, workspaceFolderPath, r.ext);
@@ -147,10 +183,10 @@ function generateDocs(uri) {
   }
 }
 
-function generateMD(uri) {
+function generateDst(uri) {
   const filePath = uri.fsPath;
   const workspaceFolderPath = getWorkspaceFolderPath(uri);
-  const res = mapToVirtual(filePath, workspaceFolderPath, config.codeToMd);
+  const res = mapToVirtual(filePath, workspaceFolderPath, config.dstRule);
   if (!res) {
     logger.log(`${filePath} not match any rule or excluded`);
     return;

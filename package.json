@@ -2,7 +2,7 @@
   "name": "dstutils",
   "displayName": "Don't Starve Utils",
   "description": "generate cache files",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -45,28 +45,82 @@
           "items": {
             "type": "object",
             "properties": {
-              "mdDir": {
-                "type": "string",
-                "description": "markdown folder"
+              "src": {
+                "type": "object",
+                "properties": {
+                  "dir": {
+                    "type": "string",
+                    "description": "source directory"
+                  },
+                  "ext": {
+                    "type": "string",
+                    "description": "source file extension"
+                  },
+                  "position": {
+                    "type": "string",
+                    "description": "source position"
+                  }
+                },
+                "description": "source"
               },
-              "cacheDir": {
-                "type": "string",
-                "description": "cache folder"
+              "dst": {
+                "type": "object",
+                "properties": {
+                  "dir": {
+                    "type": "string",
+                    "description": "destination directory"
+                  },
+                  "ext": {
+                    "type": "string",
+                    "description": "destination file extension"
+                  },
+                  "position": {
+                    "type": "string",
+                    "description": "destination position"
+                  }
+                },
+                "description": "destination"
               },
-              "codeDir": {
-                "type": "string",
-                "description": "code folder"
+              "cache": {
+                "type": "object",
+                "properties": {
+                  "src": {
+                    "type": "object",
+                    "properties": {
+                      "dir": {
+                        "type": "string",
+                        "description": "cache source directory"
+                      },
+                      "ext": {
+                        "type": "string",
+                        "description": "cache source file extension"
+                      }
+                    },
+                    "description": "cache source"
+                  },
+                  "dst": {
+                    "type": "object",
+                    "properties": {
+                      "dir": {
+                        "type": "string",
+                        "description": "cache destination directory"
+                      },
+                      "ext": {
+                        "type": "string",
+                        "description": "cache destination file extension"
+                      }
+                    },
+                    "description": "cache destination"
+                  }
+                },
+                "description": "cache"
               },
               "exclude": {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "exclude files"
-              },
-              "ext": {
-                "type": "string",
-                "description": "code file extension"
+                "description": "files to exclude"
               }
             }
           },
@@ -76,30 +130,22 @@
     },
     "commands": [
       {
-        "command": "dstutils.openCode",
-        "title": "open the corresponding code"
-      },
-      {
-        "command": "dstutils.openMarkdown",
-        "title": "open the corresponding markdown"
+        "command": "dstutils.compare",
+        "title": "compare the files"
       },
       {
         "command": "dstutils.generateSummary",
         "title": "generate summary"
       },
       {
-        "command": "dstutils.generateMarkdown",
-        "title": "generate the corresponding markdown"
+        "command": "dstutils.createDst",
+        "title": "create the dest file"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "dstutils.openCode",
-          "group": "dstutils"
-        },
-        {
-          "command": "dstutils.openMarkdown",
+          "command": "dstutils.compare",
           "group": "dstutils"
         },
         {
@@ -107,7 +153,7 @@
           "group": "dstutils"
         },
         {
-          "command": "dstutils.generateMarkdown",
+          "command": "dstutils.createDst",
           "group": "dstutils"
         }
       ]

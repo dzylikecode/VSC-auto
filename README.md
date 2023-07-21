@@ -8,34 +8,11 @@ help write Don't Starve Docs
 - context menu:
   - generate the Markdown file in the `mdDir` directory which is corresponding to the code file
   - generate the `SUMMARY.md` file associated with the `mdDir` directory
-  - open the Markdown corresponding to the code file when the code file is focused
-  - open the code file corresponding to the Markdown file when the Markdown file is focused
+  - open the associated files at the same time
 
 ## Settings
 
-- `dstutils.mapRules`: `[object]`
-
-  each object is a rule:
-
-  - `mdDir`: `string`
-
-    the directory where the Markdown file is located
-
-  - `cacheDir`: `string`
-
-    the directory where the cache file is located
-
-  - `codeDir`: `string`
-
-    the directory where the code file is located
-
-  - `exclude`: `string[]`
-
-    the file name that will not generate the cache file
-
-  - `ext`: `string`
-
-    the file extension of the code file
+see example
 
 ### example
 
@@ -43,11 +20,13 @@ help write Don't Starve Docs
 {
   "dstutils.mapRules": [
     {
-      "mdDir": "docs/",
-      "cacheDir": "assets/cache/",
-      "codeDir": "code/",
-      "exclude": ["README", "SUMMARY"],
-      "ext": ".lua"
+      "src": { "dir": "temp/scripts-DST", "ext": ".lua", "position": "right" },
+      "dst": { "dir": "docs/", "ext": ".md", "position": "left" },
+      "cache": {
+        "src": { "dir": "docs/", "ext": ".md" },
+        "dst": { "dir": "assets/cache/", "ext": ".json" }
+      },
+      "exclude": ["README", "SUMMARY"]
     }
   ]
 }
