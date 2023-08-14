@@ -91,7 +91,7 @@ function parseChunk(chunk) {
 }
 
 function parse(virtualName, text) {
-  const parts = splitToParts(text);
+  const parts = splitToParts(text.replace(/\r\n/g, "\n")); // normalize line endings
   const [headPart, ...restParts] = parts;
   const headMsg = parseHeader(headPart);
   const chunks = restParts
