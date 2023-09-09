@@ -6,6 +6,7 @@ const logger = require("./logger.js");
 const { getWorkspaceFolderPath, mapToVirtual } = require("./utils.js");
 const config = require("./config.js");
 const path = require("path");
+const { toggleExport } = require("./toggleExport.js");
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -54,6 +55,7 @@ function activate(context) {
   registerCommand("dstutils.createDst", () =>
     generateDst(vscode.window.activeTextEditor.document.uri)
   );
+  registerCommand("dstutils.toggleExport", () => toggleExport());
 }
 
 function deactivate() {}

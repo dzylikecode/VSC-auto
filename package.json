@@ -2,7 +2,7 @@
   "name": "dstutils",
   "displayName": "Don't Starve Utils",
   "description": "generate cache files",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -140,6 +140,10 @@
       {
         "command": "dstutils.createDst",
         "title": "create the dest file"
+      },
+      {
+        "command": "dstutils.toggleExport",
+        "title": "toggle exports"
       }
     ],
     "menus": {
@@ -155,9 +159,20 @@
         {
           "command": "dstutils.createDst",
           "group": "dstutils"
+        },
+        {
+          "command": "dstutils.toggleExport",
+          "group": "dstutils"
         }
       ]
-    }
+    },
+    "keybindings": [
+      {
+        "key": "ctrl+d",
+        "command": "dstutils.toggleExport",
+        "when": "editorTextFocus && editorLangId == markdown"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

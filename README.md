@@ -9,6 +9,7 @@ help write Don't Starve Docs
   - generate the Markdown file in the `mdDir` directory which is corresponding to the code file
   - generate the `SUMMARY.md` file associated with the `mdDir` directory
   - open the associated files at the same time
+  - export or don't export parts (ctrl + d)
 
 ## Settings
 
